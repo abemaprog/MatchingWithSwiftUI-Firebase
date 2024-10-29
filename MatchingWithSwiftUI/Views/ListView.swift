@@ -33,7 +33,9 @@ extension ListView {
         ZStack {
             // UserがIdentifiableに準拠（ユニークなことを保証）しているため、第二引数にidを渡す必要がない。
             ForEach(viewModel.users.reversed()) { user in
-                CardView(user: user)
+                CardView(user: user) { isRedo in
+                    viewModel.adjustIndex(isRedo: isRedo)
+                }
             }
         }
     }
@@ -56,7 +58,7 @@ extension ListView {
             
             // 戻す
             Button {
-                print("ボタンがタップされました")
+                viewModel.redoButtontapped()
             } label: {
                 Image(systemName: "arrow.counterclockwise")
                     .font(.system(size: 26, weight: .bold))
@@ -70,7 +72,7 @@ extension ListView {
             
             // Like
             Button {
-                print("ボタンがタップされました")
+                viewModel.likeButtontapped()
             } label: {
                 Image(systemName: "heart")
                     .font(.system(size: 26, weight: .bold))
