@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+enum Action {
+    case nope
+    case redo
+    case like
+}

@@ -44,7 +44,7 @@ extension ListView {
         HStack(spacing: 60) {
             // Nope
             Button {
-                viewModel.nopeButtontapped()
+                viewModel.tappedHandler(action: .nope)
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 26, weight: .bold))
@@ -58,7 +58,7 @@ extension ListView {
             
             // 戻す
             Button {
-                viewModel.redoButtontapped()
+                viewModel.tappedHandler(action: .redo)
             } label: {
                 Image(systemName: "arrow.counterclockwise")
                     .font(.system(size: 26, weight: .bold))
@@ -72,7 +72,7 @@ extension ListView {
             
             // Like
             Button {
-                viewModel.likeButtontapped()
+                viewModel.tappedHandler(action: .like)
             } label: {
                 Image(systemName: "heart")
                     .font(.system(size: 26, weight: .bold))

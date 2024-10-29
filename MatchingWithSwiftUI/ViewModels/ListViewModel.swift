@@ -27,18 +27,24 @@ class ListViewModel {
             User.MOCK_USER7
         ]
     }
-    func nopeButtontapped() {
-        // カードがなくなった時にクラッシュさせないため
-        if currentIndex >= users.count { return }
-        
-        // 第一引数にはnameを特定するための識別詞
-        NotificationCenter.default.post(name: Notification.Name("NOPEACTION"), object: nil, userInfo: [
-            "id": users[currentIndex].id
-        ])
-        currentIndex += 1
+    func adjustIndex(isRedo: Bool) {
+        if isRedo {
+            currentIndex -= 1
+        } else {
+            currentIndex += 1
+        }
     }
-    
-    func likeButtontapped() {
-        print("Likeボタンがタップされました。")
+    func tappedHandler(action: Action) {
+        switch action {
+        case .nope, .like:
+            if currentIndex >= users.count { return }
+        case .redo:
+            if currentIndex <= 0 { return }
+        }
+        
+        NotificationCenter.default.post(name: Notification.Name("ACTIONFROMBUTTON"), object: nil, userInfo: [
+            "id": action == .redo ? users[currentIndex - 1].id : users[currentIndex].id,
+            "action": action
+        ])
     }
 }
