@@ -9,7 +9,12 @@ import SwiftUI
 
 struct BrandImage: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Image(systemName: "flame.circle.fill")
+            .resizable()
+            .scaledToFill()
+            .foregroundStyle(.red)
+            .frame(width: 120, height: 120)
+            .padding(.vertical, 32)
     }
 }
 

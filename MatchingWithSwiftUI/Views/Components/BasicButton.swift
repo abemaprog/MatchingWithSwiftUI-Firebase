@@ -8,11 +8,32 @@
 import SwiftUI
 
 struct BasicButton: View {
+    let label: String
+    var icon: String? = nil
+    let action: () -> Void
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Button {
+            action()
+        } label: {
+            HStack {
+                Text(label)
+                if let name = icon {
+                    Image(systemName: "arrow.right")
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .fontWeight(.bold)
+            .foregroundStyle(.white)
+            .background(.red)
+            .clipShape(Capsule())
+        }
     }
 }
 
 #Preview {
-    BasicButton()
+    BasicButton(label: "ボタン") {
+        print("ボタンがタップされました。")
+    }
 }
