@@ -22,7 +22,7 @@ struct RegistrationView: View {
     var body: some View {
         VStack {
             // Imgage
-            BrandImage()
+            BrandImage(size: .large)
             
             // Form
             VStack(spacing: 24) {
@@ -31,28 +31,7 @@ struct RegistrationView: View {
                 // 名前
                 InputField(text: $name, label: "お名前", placeholder: "入力してください")
                 // 年齢
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text("年齢")
-                            .foregroundStyle(Color(.darkGray))
-                            .fontWeight(.semibold)
-                            .font(.footnote)
-                        
-                        Spacer()
-                        
-                        Picker(selection: $age) {
-                            ForEach(18..<100) { number in
-                                Text("\(number)")
-                                    .tag(number)
-                            }
-                        } label: {
-                            Text("年齢")
-                        }
-                        .tint(.black)
-                        
-                    }
-                    Divider()
-                }
+                PickerField(selection: $age, title: "年齢")
                 // パスワード
                 InputField(text: $password, label: "パスワード", placeholder: "半角英数字6文字以上", isSecureField: true)
                 // パスワード（確認用）
