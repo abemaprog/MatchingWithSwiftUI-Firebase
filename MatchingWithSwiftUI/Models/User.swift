@@ -12,6 +12,7 @@ struct User: Identifiable, Codable {
     let name: String
     let email: String
     let age: Int
+    
     //画像やメッセージがない時のためのオプショナル型
     var photoUrl: String?
     var message: String?

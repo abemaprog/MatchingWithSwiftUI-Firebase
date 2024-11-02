@@ -18,7 +18,6 @@ class ListViewModel: ObservableObject {
         // self.users = getMOCKUSers()
         Task {
             self.users = await fetchUsers()
-            print("self.users: \(self.users)")
         }
     }
     

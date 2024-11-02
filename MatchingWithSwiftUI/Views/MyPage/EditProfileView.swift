@@ -10,9 +10,11 @@ import PhotosUI
 
 struct EditProfileView: View {
     
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
     @State var selectedImage: PhotosPickerItem? = nil
     @State var name = ""
-    @State var age = 0
+    @State var age = 18
     @State var message = ""
     
     @Environment(\.dismiss) var dismiss
@@ -33,14 +35,24 @@ struct EditProfileView: View {
             .navigationTitle("プロフィール変更")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .topBarLeading) { // error here
                     Button("キャンセル") {
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("変更") {
-                        
+                        Task {
+                            
+                            guard let currentUser = authViewModel.currentUser else { return }
+                            
+                            await authViewModel.updateUserProfile(
+                                withId: currentUser.id,
+                                name: name,
+                                age: age,
+                                message: message)
+                        }
+                        dismiss()
                     }
                 }
             }
@@ -52,6 +64,7 @@ struct EditProfileView: View {
 
 #Preview {
     EditProfileView()
+        .environmentObject(AuthViewModel())
 }
 
 extension EditProfileView {
@@ -89,5 +102,14 @@ extension EditProfileView {
                 .stroke(Color(.systemGray4), lineWidth: 1)
         }
         .padding()
+        .onAppear {
+            if let currentUser = authViewModel.currentUser {
+                name = currentUser.name
+                age = currentUser.age
+                message = currentUser.message ?? ""
+            }
+        }
     }
 }
+
+
