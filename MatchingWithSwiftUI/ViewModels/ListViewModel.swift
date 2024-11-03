@@ -41,7 +41,7 @@ class ListViewModel: ObservableObject {
             var tempUsers = [User]()
             for documents in snapshot.documents {
                 let user = try documents.data(as: User.self)
-                print("user: \(user)")
+                //print("user: \(user)")
                 tempUsers.append(user)
             }
             return tempUsers

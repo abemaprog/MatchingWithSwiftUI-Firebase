@@ -49,10 +49,23 @@ struct CardView: View {
 // MARK: -UI
 extension CardView {
     private var imageLayer: some View {
-        Image(user.photoUrl ?? "avatar") // アンラップする必要 nil結合演算子
-            .resizable()
-            .aspectRatio(contentMode: .fill) //元の縦横比を維持
-            .frame(width: 100)
+        Group {
+            if let urlString = user.photoUrl, let url = URL(string : urlString) {
+                AsyncImage(url: url) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: screenWidth - 16)
+                } placeholder: {
+                    ProgressView()
+                }
+            } else {
+                Image(user.photoUrl ?? "avatar") // アンラップする必要 nil結合演算子
+                    .resizable()
+                    .aspectRatio(contentMode: .fill) //元の縦横比を維持
+                    .frame(width: 100)
+            }
+        }
     }
     
     private var infomationLayer: some View {

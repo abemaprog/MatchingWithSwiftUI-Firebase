@@ -57,11 +57,27 @@ extension MyPageView {
     private var userInfo: some View {
         Section {
             HStack(spacing: 16) {
-                Image("avatar")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 48, height: 48)
-                    .clipShape(Circle())
+                if let urlString = authViewModel.currentUser?.photoUrl, let url = URL(string: urlString) {
+                    AsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 48, height: 48)
+                            .clipShape(Circle())
+                    } placeholder: {
+                        ProgressView()
+                            .frame(width: 48, height: 48)
+                    }
+
+                } else {
+                    Image("avatar")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 48, height: 48)
+                        .clipShape(Circle())
+                }
+                
+                
                 VStack(alignment: .leading, spacing: 4) {
                     Text(authViewModel.currentUser?.name ?? "")
                         .font(.subheadline)

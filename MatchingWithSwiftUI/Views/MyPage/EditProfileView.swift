@@ -11,8 +11,6 @@ import PhotosUI
 struct EditProfileView: View {
     
     @EnvironmentObject var authViewModel: AuthViewModel
-    
-    @State var selectedImage: PhotosPickerItem? = nil
     @State var name = ""
     @State var age = 18
     @State var message = ""
@@ -71,20 +69,30 @@ extension EditProfileView {
     private var editField: some View {
         VStack(spacing: 16) {
             // Photo
-            PhotosPicker(selection: $selectedImage) {
-                ZStack {
-                    Image("avatar")
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                        .frame(width: 150)
-                    
-                    Image(systemName: "photo.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundStyle(Color.white.opacity(0.75))
-                        .frame(width: 60)
-                    
+            PhotosPicker(selection: $authViewModel.selectedImage) {
+                Group {
+                    if let uiImage = authViewModel.profileImage {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                            .frame(width: 150)
+                    } else {
+                        ZStack {
+                            Image("avatar")
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                                .frame(width: 150)
+                            
+                            Image(systemName: "photo.circle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(Color.white.opacity(0.75))
+                                .frame(width: 60)
+                            
+                        }
+                    }
                 }
             }
             
