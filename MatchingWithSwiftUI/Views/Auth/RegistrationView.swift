@@ -25,11 +25,13 @@ struct RegistrationView: View {
         VStack {
             // Imgage
             BrandImage(size: .large)
+                .padding(.vertical, 32)
             
             // Form
             VStack(spacing: 24) {
                 // メールアドレス
-                InputField(text: $email, label: "メールアドレス", placeholder: "入力してください")
+                InputField(text: $email, label: "メールアドレス", placeholder: "入力してください", keyboardType: .emailAddress)
+                
                 // 名前
                 InputField(text: $name, label: "お名前", placeholder: "入力してください")
                 // 年齢

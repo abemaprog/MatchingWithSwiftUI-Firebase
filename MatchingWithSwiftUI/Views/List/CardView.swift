@@ -135,11 +135,14 @@ extension CardView {
         adjustIndex(false)
     }
     
-    private func resetCard() {
+    private func resetCard(fromButton: Bool = false) {
         withAnimation(.smooth) {
             offset = .zero
         }
-        adjustIndex(true)
+        if fromButton {
+            adjustIndex(true)
+        }
+        
     }
     
     // someによりさまざまな型を内包した抽象的なデータ型を表現できる
@@ -184,7 +187,7 @@ extension CardView {
             case .nope:
                 removeCard(isLiked: false)
             case .redo:
-                resetCard()
+                resetCard(fromButton: true)
             case .like:
                 removeCard(isLiked: true)
             }

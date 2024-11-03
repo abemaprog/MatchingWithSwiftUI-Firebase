@@ -26,7 +26,9 @@ struct BasicButton: View {
             .padding(.vertical, 16)
             .fontWeight(.bold)
             .foregroundStyle(.white)
-            .background(.red)
+            .background(
+                .linearGradient(colors: [.brandColorLight, .brandColorDark], startPoint: .topTrailing, endPoint: .bottomLeading)
+            )
             .clipShape(Capsule())
         }
     }
