@@ -77,6 +77,17 @@ extension EditProfileView {
                             .scaledToFit()
                             .clipShape(RoundedRectangle(cornerRadius: 6))
                             .frame(width: 150)
+                    } else if let urlString = authViewModel.currentUser?.photoUrl, let url = URL(string: urlString) {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                                .frame(width: 150)
+                        } placeholder: {
+                            ProgressView()
+                                .frame(width: 150, height: 150)
+                        }
                     } else {
                         ZStack {
                             Image("avatar")
@@ -99,7 +110,7 @@ extension EditProfileView {
             // InputField
             InputField(text: $name, label: "お名前", placeholder: "")
             PickerField(selection: $age, title: "年齢")
-            InputField(text: $message, label: "メッセージ", placeholder: "入力してください", withDivider: false)
+            InputField(text: $message, label: "メッセージ", placeholder: "入力してください", withDivider: false, isVertical: true)
         }
         .padding(.horizontal)
         .padding(.vertical, 32)

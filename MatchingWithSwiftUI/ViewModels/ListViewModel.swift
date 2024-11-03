@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 import FirebaseFirestore
 
 class ListViewModel: ObservableObject {
@@ -35,14 +36,21 @@ class ListViewModel: ObservableObject {
     // Download User data
     
     private func fetchUsers() async -> [User]{
+        //　ログインしているユーザーのuidを取得
+        guard let currentUid = Auth.auth().currentUser?.uid else { return [] }
+        
         do {
+            // usersコレクションに含まれるドキュメントをダウンロードして、そのデータをリストに表示されるデータセットに格納される処理
             let snapshot = try await Firestore.firestore().collection("users").getDocuments()
             
             var tempUsers = [User]()
             for documents in snapshot.documents {
                 let user = try documents.data(as: User.self)
                 //print("user: \(user)")
-                tempUsers.append(user)
+                // 一致していなければappendされる
+                if user.id != currentUid {
+                    tempUsers.append(user)
+                }
             }
             return tempUsers
             

@@ -39,6 +39,8 @@ class AuthViewModel: ObservableObject {
             print("ログイン成功: \(result.user.email)")
             self.userSession = result.user
             print("self.userSession: \(self.userSession?.email)")
+            
+            await self.fetchCurrentUser()
             } catch {
             // errorはデフォルトなので省略可
             print("ログイン登録失敗: \(error.localizedDescription)") // localizedDescriptionでエラー文を文字列で取得
@@ -46,11 +48,12 @@ class AuthViewModel: ObservableObject {
     }
     
     // Logout
+    @MainActor
     func logout() {
         do {
             try Auth.auth().signOut()
             print("ログアウト成功")
-            self.userSession = nil
+            self.resetAcount()
         } catch {
             print("ログアウト失敗: \(error.localizedDescription)")
         }
@@ -70,6 +73,7 @@ class AuthViewModel: ObservableObject {
             
             let newUser = User(id: result.user.uid, name: name, email: email, age: age)
             await uploadUserData(withUser: newUser)
+            await self.fetchCurrentUser()
         } catch {
             // errorはデフォルトなので省略可
             print("ユーザー登録失敗: \(error.localizedDescription)") // localizedDescriptionでエラー文を文字列で取得
@@ -79,6 +83,28 @@ class AuthViewModel: ObservableObject {
     
     
     // Delete Account
+    @MainActor
+    func deleteAccount() async {
+        guard let id = self.currentUser?.id else { return }
+        
+        do {
+            try await Auth.auth().currentUser?.delete()
+            try await Firestore.firestore().collection("users").document(id).delete()
+            print("アカウント削除成功")
+            self.resetAcount()
+        } catch {
+            print("アカウント削除失敗: \(error.localizedDescription)")
+        }
+        
+    }
+    
+    // Reset Account
+    @MainActor
+    private func resetAcount() {
+        self.userSession = nil
+        self.currentUser = nil
+        self.profileImage = nil
+    }
     
     
     // Upload User Data
