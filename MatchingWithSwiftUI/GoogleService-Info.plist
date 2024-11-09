@@ -13,17 +13,19 @@
 	<key>PROJECT_ID</key>
 	<string>matchingwithswiftui-a58f4</string>
 	<key>STORAGE_BUCKET</key>
-	<string>matchingwithswiftui-a58f4.appspot.com</string>
+	<string>matchingwithswiftui-a58f4.firebasestorage.app</string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:306371913230:ios:b3d3007ce2541d7f593e5f</string>
 </dict>

@@ -20,20 +20,17 @@ struct EditProfileView: View {
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
-                // background
+                // Background
                 Color(.systemGroupedBackground)
                     .ignoresSafeArea()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 32, height: 32)
-                    .clipShape(Circle())
                 
-                // EditField
+                // Edit field
                 editField
             }
             .navigationTitle("プロフィール変更")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) { // error here
+                ToolbarItem(placement: .topBarLeading) {
                     Button("キャンセル") {
                         dismiss()
                     }
@@ -49,8 +46,9 @@ struct EditProfileView: View {
                                 name: name,
                                 age: age,
                                 message: message)
+                            
+                            dismiss()
                         }
-                        dismiss()
                     }
                 }
             }
@@ -62,13 +60,13 @@ struct EditProfileView: View {
 
 #Preview {
     EditProfileView()
-        .environmentObject(AuthViewModel())
 }
 
 extension EditProfileView {
+    
     private var editField: some View {
         VStack(spacing: 16) {
-            // Photo
+            // Photo picker
             PhotosPicker(selection: $authViewModel.selectedImage) {
                 Group {
                     if let uiImage = authViewModel.profileImage {
@@ -77,7 +75,7 @@ extension EditProfileView {
                             .scaledToFit()
                             .clipShape(RoundedRectangle(cornerRadius: 6))
                             .frame(width: 150)
-                    } else if let urlString = authViewModel.currentUser?.photoUrl, let url = URL(string: urlString) {
+                    } else if let urlString = authViewModel.currentUser?.photoUrl , let url = URL(string: urlString) {
                         AsyncImage(url: url) { image in
                             image
                                 .resizable()
@@ -101,13 +99,12 @@ extension EditProfileView {
                                 .scaledToFit()
                                 .foregroundStyle(Color.white.opacity(0.75))
                                 .frame(width: 60)
-                            
                         }
                     }
                 }
             }
             
-            // InputField
+            // Input field
             InputField(text: $name, label: "お名前", placeholder: "")
             PickerField(selection: $age, title: "年齢")
             InputField(text: $message, label: "メッセージ", placeholder: "入力してください", withDivider: false, isVertical: true)

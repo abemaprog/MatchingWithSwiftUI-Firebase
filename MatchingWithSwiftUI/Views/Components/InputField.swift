@@ -12,7 +12,7 @@ struct InputField: View {
     @Binding var text: String
     let label: String
     let placeholder: String
-    var isSecureField = false
+    var isSeccureField = false
     var withDivider = true
     var isVertical = false
     var keyboardType: UIKeyboardType = .default
@@ -23,13 +23,12 @@ struct InputField: View {
                 .foregroundStyle(Color(.darkGray))
                 .fontWeight(.semibold)
                 .font(.footnote)
-            
-            if isSecureField {
+            if isSeccureField {
                 SecureField(placeholder, text: $text)
             } else {
-                TextField(placeholder, text: $text, axis: isVertical ? .vertical : .horizontal) //axis: .verticalで複数行に対応できる
-                    .textInputAutocapitalization(.never) //　最初の文字が大文字にならないようにする
-                    .keyboardType(keyboardType) // メールアドレス入力用のキーボードにする
+                TextField(placeholder, text: $text, axis: isVertical ? .vertical : .horizontal)
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(keyboardType)
             }
             
             if withDivider {

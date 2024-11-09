@@ -9,8 +9,8 @@ import SwiftUI
 
 struct RegistrationView: View {
     
-    //private let authViewModel = AuthViewModel()
-    //let authViewModel: AuthViewModel
+    // private let authViewModel = AuthViewModel()
+    // let authViewModel: AuthViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
     
     @State private var email = ""
@@ -23,31 +23,27 @@ struct RegistrationView: View {
     
     var body: some View {
         VStack {
-            // Imgage
+            
+            // Imgae
             BrandImage(size: .large)
                 .padding(.vertical, 32)
             
             // Form
             VStack(spacing: 24) {
-                // メールアドレス
                 InputField(text: $email, label: "メールアドレス", placeholder: "入力してください", keyboardType: .emailAddress)
-                
-                // 名前
                 InputField(text: $name, label: "お名前", placeholder: "入力してください")
-                // 年齢
                 PickerField(selection: $age, title: "年齢")
-                // パスワード
-                InputField(text: $password, label: "パスワード", placeholder: "半角英数字6文字以上", isSecureField: true)
-                // パスワード（確認用）
-                InputField(text: $confirmPassword, label: "パスワード（確認用）", placeholder: "もう一度、入力してください", isSecureField: true)
+                InputField(text: $password, label: "パスワード", placeholder: "半角英数字6文字以上", isSeccureField: true)
+                InputField(text: $confirmPassword, label: "パスワード（確認用）", placeholder: "もう一度、入力してください", isSeccureField: true)
             }
+            
             // Button
             BasicButton(label: "登録", icon: "arrow.right") {
                 Task {
                     await authViewModel.createAccount(
                         email: email,
-                        name: name,
                         password: password,
+                        name: name,
                         age: age
                     )
                 }

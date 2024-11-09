@@ -19,7 +19,7 @@ struct BasicButton: View {
             HStack {
                 Text(label)
                 if let name = icon {
-                    Image(systemName: "arrow.right")
+                    Image(systemName: name)
                 }
             }
             .frame(maxWidth: .infinity)

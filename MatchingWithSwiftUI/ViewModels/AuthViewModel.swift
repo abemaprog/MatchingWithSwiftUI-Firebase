@@ -26,14 +26,15 @@ class AuthViewModel: ObservableObject {
     init() {
         self.userSession = Auth.auth().currentUser
         print("ログインユーザー: \(self.userSession?.email)")
+        
         Task {
             await self.fetchCurrentUser()
         }
     }
     
     // Login
-    @MainActor //Mianスレッドで実行することを保証する
-    func login(email: String, password: String) async{
+    @MainActor
+    func login(email: String, password: String) async {
         do {
             let result = try await Auth.auth().signIn(withEmail: email, password: password)
             print("ログイン成功: \(result.user.email)")
@@ -41,46 +42,40 @@ class AuthViewModel: ObservableObject {
             print("self.userSession: \(self.userSession?.email)")
             
             await self.fetchCurrentUser()
-            } catch {
-            // errorはデフォルトなので省略可
-            print("ログイン登録失敗: \(error.localizedDescription)") // localizedDescriptionでエラー文を文字列で取得
-            }
+        } catch {
+            print("ログイン失敗: \(error.localizedDescription)")
+        }
     }
     
     // Logout
-    @MainActor
     func logout() {
         do {
             try Auth.auth().signOut()
             print("ログアウト成功")
-            self.resetAcount()
+            self.resetAccount()
         } catch {
             print("ログアウト失敗: \(error.localizedDescription)")
         }
-        
     }
     
-    
     // Create Account
-    // async: 非同期処理を行うことができる関数にできる
     @MainActor
-    func createAccount(email: String,name: String, password: String, age: Int) async {
+    func createAccount(email: String, password: String, name: String, age: Int) async {
         do {
-            // await 非同期処理で使われ、その処理が終わるまで次に進むのを停止する
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             print("ユーザー登録成功: \(result.user.email)")
             self.userSession = result.user
             
             let newUser = User(id: result.user.uid, name: name, email: email, age: age)
             await uploadUserData(withUser: newUser)
+            
             await self.fetchCurrentUser()
         } catch {
-            // errorはデフォルトなので省略可
-            print("ユーザー登録失敗: \(error.localizedDescription)") // localizedDescriptionでエラー文を文字列で取得
+            print("ユーザー登録失敗: \(error.localizedDescription)")
         }
-        print("アカウント登録から呼び出されました")
+        
+        print("アカウント登録画面からcreateAccountメソッドが呼び出されました")
     }
-    
     
     // Delete Account
     @MainActor
@@ -91,21 +86,18 @@ class AuthViewModel: ObservableObject {
             try await Auth.auth().currentUser?.delete()
             try await Firestore.firestore().collection("users").document(id).delete()
             print("アカウント削除成功")
-            self.resetAcount()
+            self.resetAccount()
         } catch {
             print("アカウント削除失敗: \(error.localizedDescription)")
         }
-        
     }
     
     // Reset Account
-    @MainActor
-    private func resetAcount() {
+    private func resetAccount() {
         self.userSession = nil
         self.currentUser = nil
         self.profileImage = nil
     }
-    
     
     // Upload User Data
     private func uploadUserData(withUser user: User) async {
@@ -118,11 +110,11 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    //Fetch current user
+    // Fetch current User
     @MainActor
     private func fetchCurrentUser() async {
-        
         guard let uid = self.userSession?.uid else { return }
+        
         do {
             let snapshot = try await Firestore.firestore().collection("users").document(uid).getDocument()
             self.currentUser = try snapshot.data(as: User.self)
@@ -132,32 +124,32 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    // Update Profile
+    // Update user profile
     func updateUserProfile(withId id: String, name: String, age: Int, message: String) async {
-        var data: [AnyHashable : Any] = [
-            //　キーを設定
+        var data: [AnyHashable: Any] = [
             "name": name,
             "age": age,
             "message": message
         ]
         
-        if let urlString = await upLoadImage() {
-            data["photoURL"] = urlString
+        if let urlString = await uploadImage() {
+            data["photoUrl"] = urlString
         }
         
         do {
             try await Firestore.firestore().collection("users").document(id).updateData(data)
-            print("プロフィール更新成功")
+            print("プロフィール変更成功")
             await self.fetchCurrentUser()
         } catch {
-            print("プロフィール更新失敗: \(error.localizedDescription)")
+            print("プロフィール変更失敗: \(error.localizedDescription)")
         }
     }
     
-    // LoadImage
+    // Loading image
     @MainActor
     private func loadImage() async {
-        guard let image = selectedImage else{ return }
+        guard let image = selectedImage else { return }
+        
         do {
             guard let data = try await image.loadTransferable(type: Data.self) else { return }
             self.profileImage = UIImage(data: data)
@@ -166,8 +158,8 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    // upload Image
-    private func upLoadImage() async -> String? {
+    // Upload image data
+    private func uploadImage() async -> String? {
         let filename = NSUUID().uuidString
         let storageRef = Storage.storage().reference(withPath: "/user_images/\(filename)")
         
@@ -185,5 +177,5 @@ class AuthViewModel: ObservableObject {
             return nil
         }
     }
-    
 }
+
